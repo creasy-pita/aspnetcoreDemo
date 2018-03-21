@@ -46,7 +46,7 @@ namespace MyCookieAuthSample.Controllers
             var identityResult = await userManager.CreateAsync(identityUser,registerViewModel.Password);
             if (identityResult.Succeeded)
             {
-                return RedirectToAction("Home", "Index");
+                return RedirectToAction("Index", "Home");
             }
             return View();
         }
@@ -55,7 +55,18 @@ namespace MyCookieAuthSample.Controllers
         {
             return View();
         }
-
+        [HttpPost]
+        public async Task<IActionResult> LogIn(RegisterViewModel registerViewModel)
+        {
+            var user = await userManager.FindByEmailAsync(registerViewModel.Email);
+            if (user == null)
+            { }
+            else
+            {
+                 await signInManager.SignInAsync(user, new AuthenticationProperties { IsPersistent = true});
+            }
+            return RedirectToAction("Index", "Home");
+        }
 
         public IActionResult MakeLogin()
         {
@@ -71,10 +82,11 @@ namespace MyCookieAuthSample.Controllers
             return Ok();
         }
 
-        public IActionResult Logout()
+        public async Task<IActionResult> Logout()
         {
-            HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return Ok();
+            // await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            await signInManager.SignOutAsync();
+            return RedirectToAction("Index", "Home");
         }
 
         public IActionResult Error()
