@@ -12,7 +12,7 @@ namespace MyCookieAuthSample
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static void Main(string[] args) 
         {
             BuildWebHost(args).Run();
         }

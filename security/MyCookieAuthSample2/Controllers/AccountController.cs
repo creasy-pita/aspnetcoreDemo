@@ -26,17 +26,28 @@ namespace MyCookieAuthSample.Controllers
             this.userManager = userManager;
         }
 
-        public IActionResult Register()
+        public IActionResult Register(string returnUrl =null)
         {
-
-
+            ViewData["ReturnUrl"] = returnUrl;
             return View();
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Register(RegisterViewModel registerViewModel)
+        public IActionResult RedirectToReturnlUrl(string returnUrl)
         {
-            var identityUser = new ApplicationUser {
+            if (returnUrl != null && Url.IsLocalUrl(returnUrl))
+            {
+                return Redirect(returnUrl);
+            }
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Register(RegisterViewModel registerViewModel, string returnUrl = null)
+        {
+
+            ViewData["ReturnUrl"] = returnUrl;
+            var identityUser = new ApplicationUser
+            {
                 Email = registerViewModel.Email,
                 UserName = registerViewModel.Email,
                 NormalizedUserName = registerViewModel.Email
@@ -46,18 +57,22 @@ namespace MyCookieAuthSample.Controllers
             var identityResult = await userManager.CreateAsync(identityUser,registerViewModel.Password);
             if (identityResult.Succeeded)
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToReturnlUrl(returnUrl);
+
+                //return RedirectToAction("Index", "Home");
             }
             return View();
         }
 
-        public IActionResult LogIn()
+        public IActionResult LogIn(string returnUrl = null)
         {
+            ViewData["ReturnUrl"] = returnUrl;
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> LogIn(RegisterViewModel registerViewModel)
+        public async Task<IActionResult> LogIn(RegisterViewModel registerViewModel, string returnUrl = null)
         {
+            ViewData["ReturnUrl"] = returnUrl;
             var user = await userManager.FindByEmailAsync(registerViewModel.Email);
             if (user == null)
             { }
@@ -65,7 +80,8 @@ namespace MyCookieAuthSample.Controllers
             {
                  await signInManager.SignInAsync(user, new AuthenticationProperties { IsPersistent = true});
             }
-            return RedirectToAction("Index", "Home");
+            return RedirectToReturnlUrl(returnUrl);
+            //return RedirectToAction("Index", "Home");
         }
 
         public IActionResult MakeLogin()

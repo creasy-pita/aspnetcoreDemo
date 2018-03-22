@@ -16,5 +16,12 @@ options.LoginPath="/Account/MakeLogin"//需要登录是跳转到的path ，默�
 
 
 2 加入注册和登录的后台逻辑  data中 引入Identity User,Role
-3 加入前端逻辑，及JavaScript的规则校验逻辑
+
+
+3 加入returnurl 
+httpget 方式进入register view 时 接收rurl,  同时保存到viewdata 做页面级别的状态保存 
+register view httpost 时 前端 from中传递rurl
+注册成功是转向rurl;失败是转向 home  index
+
+4 加入前端逻辑，及JavaScript的规则校验逻辑
 
