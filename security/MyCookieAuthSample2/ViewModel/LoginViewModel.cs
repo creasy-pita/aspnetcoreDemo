@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MyCookieAuthSample.ViewModels
 {
-    public class RegisterViewModel
+    public class LoginViewModel
     {
         [Required]
         [DataType(DataType.EmailAddress)]
@@ -10,10 +10,8 @@ namespace MyCookieAuthSample.ViewModels
 
         [Required]
         [DataType(DataType.Password)]
+        [MinLength(6)]
         public string Password { get; set; }
-
-
-        public string ConfirmPassword { get; set; }
 
     }
 }

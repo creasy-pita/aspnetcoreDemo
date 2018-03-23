@@ -46,20 +46,28 @@ namespace MyCookieAuthSample.Controllers
         {
 
             ViewData["ReturnUrl"] = returnUrl;
-            var identityUser = new ApplicationUser
-            {
-                Email = registerViewModel.Email,
-                UserName = registerViewModel.Email,
-                NormalizedUserName = registerViewModel.Email
-               
-            };
+            if(ModelState.IsValid)
+            { 
+                var identityUser = new ApplicationUser
+                {
+                    Email = registerViewModel.Email,
+                    UserName = registerViewModel.Email,
+                    NormalizedUserName = registerViewModel.Email
+                };
 
-            var identityResult = await userManager.CreateAsync(identityUser,registerViewModel.Password);
-            if (identityResult.Succeeded)
-            {
-                return RedirectToReturnlUrl(returnUrl);
+                var identityResult = await userManager.CreateAsync(identityUser,registerViewModel.Password);
+                if (identityResult.Succeeded)
+                {
+                    return RedirectToReturnlUrl(returnUrl);
+                }
+                else
+                {
+                    foreach (var error in identityResult.Errors)
+                    {
+                        ModelState.AddModelError(error.Code + "1111", error.Description+"1111");
+                    }
+                }
 
-                //return RedirectToAction("Index", "Home");
             }
             return View();
         }
@@ -70,18 +78,21 @@ namespace MyCookieAuthSample.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> LogIn(RegisterViewModel registerViewModel, string returnUrl = null)
+        public async Task<IActionResult> LogIn(LoginViewModel loginViewModel, string returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
-            var user = await userManager.FindByEmailAsync(registerViewModel.Email);
-            if (user == null)
-            { }
-            else
+            if (ModelState.IsValid)
             {
-                 await signInManager.SignInAsync(user, new AuthenticationProperties { IsPersistent = true});
+                var user = await userManager.FindByEmailAsync(loginViewModel.Email);
+                if (user == null)
+                { }
+                else
+                {
+                    await signInManager.SignInAsync(user, new AuthenticationProperties { IsPersistent = true });
+                }
+                return RedirectToReturnlUrl(returnUrl);
             }
-            return RedirectToReturnlUrl(returnUrl);
-            //return RedirectToAction("Index", "Home");
+            return View();
         }
 
         public IActionResult MakeLogin()

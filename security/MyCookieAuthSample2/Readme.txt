@@ -23,5 +23,8 @@ httpget 方式进入register view 时 接收rurl,  同时保存到viewdata 做�
 register view httpost 时 前端 from中传递rurl
 注册成功是转向rurl;失败是转向 home  index
 
+4 加入 后端登录 验证
+model 增加 required, datatype.emailaddress等属性  后端验证时按此规则来验证； view页面增加 asp-validation-for="Email" 后端范围验证结果时能够按验证规则提示用户不满足的内容
+
 4 加入前端逻辑，及JavaScript的规则校验逻辑
 
