@@ -1,4 +1,10 @@
-﻿1 引入cookie认证服务
+﻿identity Mvc + cookie模式认证
+1 cookie 验证
+2 identity 登录，登出， 
+3后台 数据库形式存储
+ 需要 数据库 迁移操作
+
+1 引入cookie认证服务
 2 认证方法加入中间件流程
 
 3 在需要授权的页面加入授权属性  [Autho...]

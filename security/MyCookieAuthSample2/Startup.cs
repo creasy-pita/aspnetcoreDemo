@@ -40,7 +40,6 @@ namespace MyCookieAuthSample
                 .AddCookie(options =>
                     options.LoginPath="/Account/Login"//需要登录是跳转到的path ，默认为 Account/Login
                 );
-
             services.Configure<IdentityOptions>(options =>
             {
                 options.Password.RequireLowercase = false;
