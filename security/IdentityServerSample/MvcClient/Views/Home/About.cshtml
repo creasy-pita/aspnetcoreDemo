@@ -1,0 +1,14 @@
+﻿@{
+    ViewData["Title"] = "About";
+}
+<h2>@ViewData["Title"]</h2>
+<h3>@ViewData["Message"]</h3>
+
+<p>Use this area to provide additional information.</p>
+@foreach (var info in User.Claims)
+{
+    <p>type:@info.Type</p>
+    <p>value: @info.Value</p>
+    
+
+}

@@ -6,10 +6,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
-namespace IdentityServerCenter
+namespace MvcClient
 {
     public class Startup
     {
@@ -24,11 +22,22 @@ namespace IdentityServerCenter
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-            services.AddIdentityServer()
-                    .AddDeveloperSigningCredential()
-                    .AddInMemoryApiResources(Config.GetResource())
-                    .AddInMemoryClients(Config.GetClient())
-                    .AddTestUsers(Config.GetTestUser());
+            services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = "Cookies";
+                options.DefaultChallengeScheme = "oidc";
+            })
+                .AddCookie("Cookies")
+                .AddOpenIdConnect("oidc", options =>
+                {
+                    options.SignInScheme = "Cookies";
+
+                    options.Authority = "http://localhost:5000";
+                    options.RequireHttpsMetadata = false;
+
+                    options.ClientId = "mvc";
+                    options.SaveTokens = true;
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -38,9 +47,19 @@ namespace IdentityServerCenter
             {
                 app.UseDeveloperExceptionPage();
             }
-            app.UseIdentityServer();
+            else
+            {
+                app.UseExceptionHandler("/Home/Error");
+            }
+            app.UseAuthentication();
+            app.UseStaticFiles();
 
-            // app.UseMvc();
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute(
+                    name: "default",
+                    template: "{controller=Home}/{action=Index}/{id?}");
+            });
         }
     }
 }
