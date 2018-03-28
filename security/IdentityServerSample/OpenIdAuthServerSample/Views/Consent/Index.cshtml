@@ -1,0 +1,56 @@
+﻿@using MyCookieAuthSample.ViewModels;
+@model ConsentViewModel
+<!DOCTYPE html>
+
+<p>consent page</p>
+<div class="row page-header">
+    <div class="col-sm-10">
+        @if (!string.IsNullOrWhiteSpace(Model.ClientLogUrl))
+        { 
+            <div><img src="@Model.ClientLogUrl"/></div>
+        }
+        <h1>
+            @Model.ClientName 
+            <small>希望使用你的账户</small>
+        </h1>
+    </div>
+
+</div>
+<div class="row">
+    <form asp-action="index">
+
+        @if (Model.ResourceScopes.Any())
+    {
+        <div class="panel">
+            <div class="panel-heading">
+                <span class="glyphicon glyphicon-tasks">应用权限</span>
+            </div>
+            <ul class="list-group">
+                @foreach (var scope in Model.ResourceScopes)
+                {
+                @Html.Partial("_ScopeListitem", scope);
+        }
+
+            </ul>
+        </div>
+
+}
+
+        @if (Model.IdentityScopes.Any())
+    {
+        <div class="panel">
+            <div class="panel-heading">
+                <span class="glyphicon glyphicon-tasks">应用权限</span>
+            </div>
+            <ul class="list-group">
+                @foreach (var scope in Model.IdentityScopes)
+            {
+                @Html.Partial("_ScopeListitem", scope);
+        }
+
+            </ul>
+        </div>
+
+}
+    </form>
+</div>

@@ -1,4 +1,11 @@
-﻿2018-3-26
+﻿2018-3-27
+1 consent 页面实现
+index页面跳转的请求中获取 returnUrl ,其中包含clientid
+使用IClientStore, IResourceStore,使用 IIdentityServerInteractionService 来于client,resource信息交互
+通过以上的类获取 consentviewModel需要的信息：client信息，同意访问的scope信息
+在consent页面 提供可访问scope的勾选  
+
+2018-3-26
 作为第三方的认证服务器
 1 nuget identityserver4 
 2 
