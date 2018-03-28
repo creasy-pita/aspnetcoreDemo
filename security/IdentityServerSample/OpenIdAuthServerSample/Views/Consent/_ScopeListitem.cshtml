@@ -1,9 +1,21 @@
 ﻿@using MyCookieAuthSample.ViewModels;
 @model ScopeViewModel
 <li>
-    <p>@Model.DisplayName</p>
-    <p>@Model.Description</p>
-    <p>@Model.Required</p>
-    <p>@Model.Name</p>
+    <!--可勾选 用户信息信息项-->
+    <input type="checkbox" name="ScopesConsented" id="scope_@Model.Name" checked="@Model.Checked" value="@Model.Name"
+           disabled="@Model.Required" />
+    @if (Model.Required) { 
+
+        <input type="hidden" name="ScopesConsented" value="@Model.Name" />
+    }
+
+    <strong>@Model.Name</strong>
+    @if(!string.IsNullOrEmpty(Model.Description))
+    {
+    <div>
+        <label for="scope_@Model.Name"> @Model.Description</label>
+    </div>
+
+    }
 </li>
 

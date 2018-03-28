@@ -36,8 +36,9 @@ namespace MyCookieAuthSample.Controllers
             var client = await clientStore.FindClientByIdAsync(request.ClientId);
             var resources = await resourceStore.FindResourcesByScopeAsync(client.AllowedScopes);
 
-
-            return CreateConsentViewModel(request,client, resources);
+            ConsentViewModel vm = CreateConsentViewModel(request,client, resources);
+            vm.ReturnUrl = returnUrl;
+            return vm;
         }
 
         private ConsentViewModel CreateConsentViewModel(AuthorizationRequest request, Client client, Resources resources)
@@ -45,9 +46,9 @@ namespace MyCookieAuthSample.Controllers
             var vm = new ConsentViewModel();
             vm.ClientId = client.ClientId;
             vm.ClientName = client.ClientName;
+            vm.ClientUrl = client.ClientUri;
             vm.ClientLogUrl = client.LogoUri;
-            vm.AllowRemeberConsent = client.AllowRememberConsent;
-
+            vm.RememberConsent = client.AllowRememberConsent;
             vm.IdentityScopes = resources.IdentityResources.Select(i => CreateScopeViewModel(i));
             vm.ResourceScopes = resources.ApiResources.SelectMany(i=>i.Scopes).Select(x => CreateScopeViewModel(x));
             return vm;
@@ -92,6 +93,40 @@ namespace MyCookieAuthSample.Controllers
             return View(model);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Index(InputViewModel viewModel)
+        {
+            ConsentResponse consentResponse = null;
+            if (viewModel.Button == "no")
+            {
+                consentResponse = ConsentResponse.Denied;
+            }
+            else
+            {
+                if (viewModel.ScopesConsented != null && viewModel.ScopesConsented.Any())
+                {
+                    var scopes = viewModel.ScopesConsented;
+
+
+                    consentResponse = new ConsentResponse
+                    {
+                        RememberConsent = viewModel.RememberConsent,
+                        ScopesConsented = scopes
+                    };
+                }
+            }
+            if (consentResponse != null)
+            {
+                var request = await identityServerInteractionService.GetAuthorizationContextAsync(viewModel.ReturnUrl);
+                await identityServerInteractionService.GrantConsentAsync(request, consentResponse);//使用service 验证同意的部分
+                return Redirect(viewModel.ReturnUrl);
+            }
+            else
+            {
+                return View("index");
+                
+            }
+        }
 
         public IActionResult Error()
         {

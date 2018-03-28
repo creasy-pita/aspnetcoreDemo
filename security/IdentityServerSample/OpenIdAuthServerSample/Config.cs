@@ -64,7 +64,12 @@ namespace MyCookieAuthSample
                 new TestUser{
                     SubjectId="1",
                     Username="jesse",
-                    Password="123456"
+                    Password="123456",
+                    Claims = new []
+                    {
+                        new Claim("name", "Bob"),
+                        new Claim("website", "https://bob.com")
+                    }
                 }
             };
         }   
