@@ -12,24 +12,27 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using MyCookieAuthSample.ViewModels;
-using IdentityServer4.Test;
+using IdentityServer4.Services;
+using System.Text;
 
 namespace MyCookieAuthSample.Controllers
 {
     public class AccountController : Controller
     {
-        private TestUserStore _user;
-        // private SignInManager<ApplicationUser> signInManager;
-        // private UserManager<ApplicationUser> userManager;
-        public AccountController(TestUserStore testUserStore)
+        //private TestUserStore _user;
+        private SignInManager<ApplicationUser> signInManager;
+        private UserManager<ApplicationUser> userManager;
+        private IIdentityServerInteractionService interactionService;
+        //public AccountController(TestUserStore testUserStore)
+        //{
+        //    this._user = testUserStore;
+        //}
+        public AccountController(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, IIdentityServerInteractionService interactionService)
         {
-            this._user = testUserStore;
+            this.signInManager = signInManager;
+            this.userManager = userManager;
+            this.interactionService = interactionService;
         }
-        // public AccountController(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager)
-        // {
-        //     this.signInManager = signInManager;
-        //     this.userManager = userManager;
-        // }
 
         public IActionResult Register(string returnUrl =null)
         {
@@ -46,20 +49,58 @@ namespace MyCookieAuthSample.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        // [HttpPost]
-        // public async Task<IActionResult> Register(RegisterViewModel registerViewModel, string returnUrl = null)
-        // {
+        [HttpPost]
+        public async Task<IActionResult> Register(RegisterViewModel registerViewModel, string returnUrl = null)
+        {
 
-        //     ViewData["ReturnUrl"] = returnUrl;
-        //     if(ModelState.IsValid)
-        //     { 
+            ViewData["ReturnUrl"] = returnUrl;
+            if (ModelState.IsValid)
+            {
+                
+                ApplicationUser user = new ApplicationUser
+                {
+                    Email = registerViewModel.Email,
+                    //PasswordHash = Convert.ToBase64String(Encoding.Unicode.GetBytes(registerViewModel.Password)),
+                     //PasswordHash =registerViewModel.Password,
+                    UserName = registerViewModel.Email
+                };
 
 
-        //     }
-        //     return View();
-        // }
+                //var result = await userManager.CreateAsync(user);
+                var result = await userManager.CreateAsync(user,"Password@123");
+                if(result.Succeeded)
+                {
+                    var proper = new AuthenticationProperties{IsPersistent=true, ExpiresUtc= DateTime.UtcNow.AddMinutes(20)};
+                    await signInManager.SignInAsync(user, proper);
+                    if (interactionService.IsValidReturnUrl(returnUrl))
+                    {
+                        return Redirect(returnUrl);
+                    }
+                    else
+                    {
+                        return Redirect("/");
+                    }
 
-        public IActionResult LogIn(string returnUrl = null)
+                }
+                else
+                {
+                    foreach(var error in result.Errors)
+                    {
+                        ModelState.AddModelError(error.Code,  error.Description);
+                    }
+                }
+            }
+            return View( registerViewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Logout(LoginViewModel loginViewModel, string returnUrl = null)
+        {
+            await signInManager.SignOutAsync();
+            return RedirectToAction("index", "home");
+        }
+
+            public IActionResult LogIn(string returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
             return View();
@@ -70,27 +111,44 @@ namespace MyCookieAuthSample.Controllers
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
-                var user =  _user.FindByUsername(loginViewModel.Username);
+                ApplicationUser user = await userManager.FindByEmailAsync(loginViewModel.Email);
+
                 if (user == null)
                 { 
                     ModelState.AddModelError("111","username not exists");
                 }
                 else
                 {
-                    bool isSucc = _user.ValidateCredentials(user.Username, user.Password);
-                    if(isSucc)
-                    {
 
-                        var proper = new AuthenticationProperties{IsPersistent=true, ExpiresUtc= DateTime.UtcNow.AddMinutes(20)};
-                         await Microsoft.AspNetCore.Http.AuthenticationManagerExtensions.SignInAsync(
-                            HttpContext, user.SubjectId, user.Username, proper
-                        );
-                    }
+                    bool isSucc = await userManager.CheckPasswordAsync(user, loginViewModel.Password);
+                    //bool isSucc = await userManager.CheckPasswordAsync(user, Convert.ToBase64String(Encoding.Unicode.GetBytes(loginViewModel.Password)));
                     
+                    if (isSucc)
+                    {
+                        AuthenticationProperties properties = null;
+                        if (loginViewModel.Rememberme)
+                        {
+                            properties = new AuthenticationProperties{IsPersistent=true, ExpiresUtc= DateTime.UtcNow.AddMinutes(20)};
+                        }
+
+                        await signInManager.SignInAsync(user, properties);
+                        if(interactionService.IsValidReturnUrl(returnUrl))
+                        {
+                            return Redirect(returnUrl);
+                        }
+                        else
+                        {
+                            return Redirect("/");
+                        }
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", "a long password");
+                    }
                 }
                 return RedirectToReturnlUrl(returnUrl);
             }
-            return View();
+            return View(loginViewModel);
         }
 
         public IActionResult MakeLogin()

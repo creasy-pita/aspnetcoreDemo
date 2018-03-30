@@ -13,6 +13,8 @@ using MyCookieAuthSample.Data;
 using MyCookieAuthSample.Models;
 using Microsoft.AspNetCore.Identity;
 using MyCookieAuthSample.Services;
+using IdentityServer4.AspNetIdentity;
+using IdentityServer4;
 
 namespace MyCookieAuthSample
 {
@@ -28,35 +30,25 @@ namespace MyCookieAuthSample
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<ApplicationDbContext>(options =>
+            {
+                options.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
+            });
+
             services.AddScoped<ConsentService>();
+
+            services.AddIdentity<ApplicationUser, ApplicationUserRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
 
             services.AddIdentityServer()
             .AddDeveloperSigningCredential()
             .AddInMemoryApiResources(Config.GetResource())
             .AddInMemoryClients(Config.GetClient())
             .AddInMemoryIdentityResources(Config.GetIdentityResource())
-            .AddTestUsers(Config.GetTestUser());
+            //.AddTestUsers(Config.GetTestUser());
+            .AddAspNetIdentity<ApplicationUser>();
 
-            // services.AddDbContext<ApplicationDbContext>(options =>
-            // {
-            //     options.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
-            // });
-
-            // services.AddIdentity<ApplicationUser, ApplicationUserRole>()
-            //     .AddEntityFrameworkStores<ApplicationDbContext>()
-            //     .AddDefaultTokenProviders();
-
-            // services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-            //     .AddCookie(options =>
-            //         options.LoginPath="/Account/Login"//需要登录是跳转到的path ，默认为 Account/Login
-            //     );
-            // services.Configure<IdentityOptions>(options =>
-            // {
-            //     options.Password.RequireLowercase = false;
-            //     options.Password.RequireNonAlphanumeric = false;
-            //     options.Password.RequireUppercase = false;
-
-            // });
 
             services.AddMvc();
         }

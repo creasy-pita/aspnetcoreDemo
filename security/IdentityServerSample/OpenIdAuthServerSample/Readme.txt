@@ -1,4 +1,16 @@
-﻿2018-3-29
+﻿2018-3-30
+1 使用Identity
+startup中的service改写，中间件加入  
+登录中使用  usermanager,signmanager
+
+错误：System.InvalidOperationException:“Service type: IUserClaimsPrincipalFactory`1 not registered.”
+解决：将Asp.Net Identity添加到DI容器中时，一定要把注册IdentityServer放在Asp.Net Identity之后，因为注册IdentityServer会覆盖Asp.Net Identity的一些配置，这个非常重要。
+
+
+错误： The input is not a valid Base-64 string as it contains a non-base 64 character, more than two padding characters, or an illegal character among the padding characters.
+ bool isSucc = await userManager.CheckPasswordAsync(user, loginViewModel.Password);
+ 解决：
+2018-3-29
 1 consentcontroller 重构
 创建Services 文件目录 ，添加ConsentService，把非action部分代码放到ConsentService中
 
