@@ -20,6 +20,14 @@
     <form asp-action="index">
         <!--列举身份信息  并-->
         <input type="hidden" asp-for="ReturnUrl" />
+        @if (ViewContext.ModelState.IsValid == false)
+        {
+           <div class="alert alert-danger">
+                <strong>Error</strong>
+                <div asp-validation-summary="All" class="danger"></div>
+            </div>
+         }
+
 
         @if (Model.IdentityScopes.Any())
     {

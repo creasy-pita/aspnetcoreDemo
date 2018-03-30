@@ -1,4 +1,11 @@
-﻿2018-3-27
+﻿2018-3-29
+1 consentcontroller 重构
+创建Services 文件目录 ，添加ConsentService，把非action部分代码放到ConsentService中
+
+没有选择任何记住的选项时 提示错误
+
+
+2018-3-27
 1 consent 页面实现
 index页面跳转的请求中获取 returnUrl ,其中包含clientid
 使用IClientStore, IResourceStore,使用 IIdentityServerInteractionService 来于client,resource信息交互

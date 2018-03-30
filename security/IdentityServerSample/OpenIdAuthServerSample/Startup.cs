@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using MyCookieAuthSample.Data;
 using MyCookieAuthSample.Models;
 using Microsoft.AspNetCore.Identity;
+using MyCookieAuthSample.Services;
 
 namespace MyCookieAuthSample
 {
@@ -27,6 +28,8 @@ namespace MyCookieAuthSample
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddScoped<ConsentService>();
+
             services.AddIdentityServer()
             .AddDeveloperSigningCredential()
             .AddInMemoryApiResources(Config.GetResource())
