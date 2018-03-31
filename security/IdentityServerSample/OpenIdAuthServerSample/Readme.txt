@@ -1,4 +1,16 @@
-﻿2018-3-30
+﻿2018-3-31
+ identity ef
+ 1 引入identityserver4.entityframework (identityuser ,role 是属于 identity 模块，而此处属于 identityserver4 认证和授权的信息 模块 如 claims,grantinfo)
+ 2 包括的dbcontext 包括  configcontext, grantcontext
+
+2018-3-31
+1 通过实现IProfileservice 接口 读取更多用户的信息
+包括 角色，头像 ， sub, subjectId
+2 webhost启动时 执行检查是否有新的迁移并更新到数据库的检查迁移
+（1） 增加WebHostMigrationExtensions
+（2）增加ApplicationDbContextSeed , 包括执行检查是否有新的迁移并更新到数据库的检查迁移，默认添加一个用户
+
+2018-3-30
 1 使用Identity
 startup中的service改写，中间件加入  
 登录中使用  usermanager,signmanager

@@ -16,6 +16,7 @@ using MyCookieAuthSample.Services;
 using IdentityServer4.AspNetIdentity;
 using IdentityServer4;
 using IdentityServer4.Services;
+using System.Reflection;
 
 namespace MyCookieAuthSample
 {
@@ -31,6 +32,9 @@ namespace MyCookieAuthSample
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            string assemblyName = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
+            string IdentityServer4Connection = Configuration.GetConnectionString("IdentityServer4Connection");
+
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
@@ -58,6 +62,28 @@ namespace MyCookieAuthSample
             .AddInMemoryIdentityResources(Config.GetIdentityResource())
             //.AddTestUsers(Config.GetTestUser());
             .AddAspNetIdentity<ApplicationUser>()
+
+            .AddConfigurationStore( options=>
+                {
+                    options.ConfigureDbContext = (builder =>
+                     {
+                         builder.UseSqlite(IdentityServer4Connection,
+                             sqlOptions => sqlOptions.MigrationsAssembly(assemblyName));
+                     }
+                    );
+                }
+            )
+            .AddOperationalStore(options =>
+            {
+                options.ConfigureDbContext = (builder =>
+                {
+                    builder.UseSqlite(IdentityServer4Connection,
+                        sqlOptions => sqlOptions.MigrationsAssembly(assemblyName));
+                }
+                );
+            }
+            )
+
             .Services
                 .AddScoped<IProfileService, MyProfileService>();
             
