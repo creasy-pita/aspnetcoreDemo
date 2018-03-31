@@ -8,16 +8,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using MvcCookieAuthSample.Data;
 using Microsoft.EntityFrameworkCore;
-using MyCookieAuthSample.Data;
-using MyCookieAuthSample.Models;
+using MvcCookieAuthSample.Models;
 using Microsoft.AspNetCore.Identity;
-using MyCookieAuthSample.Services;
-using IdentityServer4.AspNetIdentity;
-using IdentityServer4;
-using IdentityServer4.Services;
 
-namespace MyCookieAuthSample
+namespace MvcCookieAuthSample
 {
     public class Startup
     {
@@ -31,13 +27,12 @@ namespace MyCookieAuthSample
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(options =>
-            {
-                options.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
+            //使用配置ApplicationDbContext使用sqlserver数据库，并配置数据库连接字符串
+            services.AddDbContext<ApplicationDbContext>(options=> {
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
 
-            services.AddScoped<ConsentService>();
-
+            //配置Identity
             services.AddIdentity<ApplicationUser, ApplicationUserRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
@@ -45,22 +40,18 @@ namespace MyCookieAuthSample
             //修改Identity配置
             services.Configure<IdentityOptions>(options =>
             {
-                options.Password.RequireLowercase = false;//包含小写字母
-                options.Password.RequireNonAlphanumeric = false;//包含特殊符号
-                options.Password.RequireUppercase = false;//包含大写字母
-                options.Password.RequiredLength = 6;//长度12位
+                options.Password.RequireLowercase = true;//包含小写字母
+                options.Password.RequireNonAlphanumeric = true;//包含特殊符号
+                options.Password.RequireUppercase = true;//包含大写字母
+                options.Password.RequiredLength = 12;//长度12位
             });
 
-            services.AddIdentityServer()
-            .AddDeveloperSigningCredential()
-            .AddInMemoryApiResources(Config.GetResource())
-            .AddInMemoryClients(Config.GetClient())
-            .AddInMemoryIdentityResources(Config.GetIdentityResource())
-            //.AddTestUsers(Config.GetTestUser());
-            .AddAspNetIdentity<ApplicationUser>()
-            .Services
-                .AddScoped<IProfileService, MyProfileService>();
-            
+
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options=>{
+                    options.LoginPath="/Account/Login";
+                });
+
 
             services.AddMvc();
         }
@@ -76,8 +67,10 @@ namespace MyCookieAuthSample
             {
                 app.UseExceptionHandler("/Home/Error");
             }
-            app.UseIdentityServer();
+
             app.UseStaticFiles();
+
+            app.UseAuthentication();
 
             app.UseMvc(routes =>
             {

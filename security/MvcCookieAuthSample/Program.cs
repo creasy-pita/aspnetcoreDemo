@@ -7,26 +7,25 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using MyCookieAuthSample.Data;
+using MvcCookieAuthSample.Data;
 
-namespace MyCookieAuthSample
+namespace MvcCookieAuthSample
 {
     public class Program
     {
         public static void Main(string[] args)
         {
             BuildWebHost(args)
-                .MigrationDbContext<ApplicationDbContext>((context, services)=>
-                    {
-                        new ApplicationDbContextSeed().SeedAsync(context, services).Wait();
-                    }
-                )
+                //自动初始化数据库开始
+                .MigrateDbContext<ApplicationDbContext>((context,services)=> {
+                    new ApplicationDbContextSeed().SeedAsync(context, services).Wait();
+                })
+                //自动初始化数据库结束
                 .Run();
         }
 
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseUrls("http://localhost:5000")
                 .UseStartup<Startup>()
                 .Build();
     }
