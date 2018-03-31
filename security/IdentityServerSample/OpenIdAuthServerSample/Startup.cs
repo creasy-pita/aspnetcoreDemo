@@ -17,6 +17,8 @@ using IdentityServer4.AspNetIdentity;
 using IdentityServer4;
 using IdentityServer4.Services;
 using System.Reflection;
+using IdentityServer4.EntityFramework.DbContexts;
+using IdentityServer4.EntityFramework.Mappers;
 
 namespace MyCookieAuthSample
 {
@@ -39,7 +41,7 @@ namespace MyCookieAuthSample
             {
                 options.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
             });
-
+            //IdentityServer4.EntityFramework.DbContexts.PersistedGrantDbContext
             services.AddScoped<ConsentService>();
 
             services.AddIdentity<ApplicationUser, ApplicationUserRole>()
@@ -102,6 +104,8 @@ namespace MyCookieAuthSample
             {
                 app.UseExceptionHandler("/Home/Error");
             }
+            InitIdentityServer4Database(app);
+
             app.UseIdentityServer();
             app.UseStaticFiles();
 
@@ -111,6 +115,39 @@ namespace MyCookieAuthSample
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+        }
+
+        public void InitIdentityServer4Database(IApplicationBuilder app)
+        {
+            using (var scope = app.ApplicationServices.CreateScope())
+            {
+                ConfigurationDbContext configurationDbContext = scope.ServiceProvider.GetRequiredService<ConfigurationDbContext>();
+                PersistedGrantDbContext persistedGrantDbContext = scope.ServiceProvider.GetRequiredService<PersistedGrantDbContext>();
+                if (!configurationDbContext.Clients.Any())
+                {
+                    foreach (var client in Config.GetClient())
+                    {
+                        configurationDbContext.Clients.Add(client.ToEntity());
+                    }
+                    configurationDbContext.SaveChanges();
+                }
+                if (!configurationDbContext.ApiResources.Any())
+                {
+                    foreach (var client in Config.GetResource())
+                    {
+                        configurationDbContext.ApiResources.Add(client.ToEntity());
+                    }
+                    configurationDbContext.SaveChanges();
+                }
+                if (!configurationDbContext.IdentityResources.Any())
+                {
+                    foreach (var client in Config.GetIdentityResource())
+                    {
+                        configurationDbContext.IdentityResources.Add(client.ToEntity());
+                    }
+                    configurationDbContext.SaveChanges();
+                }
+            }
         }
     }
 }

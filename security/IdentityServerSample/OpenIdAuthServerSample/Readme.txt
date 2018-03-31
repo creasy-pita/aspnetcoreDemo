@@ -1,13 +1,26 @@
 ﻿2018-3-31
  identity ef
  1 引入identityserver4.entityframework (identityuser ,role 是属于 identity 模块，而此处属于 identityserver4 认证和授权的信息 模块 如 claims,grantinfo)
- 2 包括的dbcontext 包括  configcontext, grantcontext
+ 2 包括的dbcontext 包括   ConfigurationDbContext,PersistedGrantDbContext
+ 3 创建 ConfigurationDbContext,PersistedGrantDbContext 对应数据库的迁移代码 并执行更新到数据库
+ netcore 开发主要命令工具包括 PM 和 CLI的dotnet 命令 两大类
+ PM  
+ 命令
+ EntityFramework\add-migration InitConfig  -Context ConfigurationDbContext -OutputDir  data/migrations/identityserver4/ConfigurationDbContext
+
+ dotnet ef cli 即 dotnet 附加ef 的cli
+dotnet ef migrations add InitDB -c ConfigurationDbContext -o  data/migrations/identityserver4/ConfigurationDbContext
+dotnet ef database update -c ConfigurationDbContext
+dotnet ef migrations add InitDB -c PersistedGrantDbContext -o  data/migrations/identityserver4/PersistedGrantDbContext
+dotnet ef database update -c PersistedGrantDbContext
+
+4 编写webhost 启动时创建库的方法
 
 2018-3-31
 1 通过实现IProfileservice 接口 读取更多用户的信息
 包括 角色，头像 ， sub, subjectId
 2 webhost启动时 执行检查是否有新的迁移并更新到数据库的检查迁移
-（1） 增加WebHostMigrationExtensions
+（1） 增加 WebHostMigrationExtensions
 （2）增加ApplicationDbContextSeed , 包括执行检查是否有新的迁移并更新到数据库的检查迁移，默认添加一个用户
 
 2018-3-30

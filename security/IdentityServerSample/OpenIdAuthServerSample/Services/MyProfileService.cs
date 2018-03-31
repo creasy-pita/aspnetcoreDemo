@@ -21,7 +21,7 @@ namespace MyCookieAuthSample.Services
             this._userManager = userManager;
         }
 
-        private async Task<List<Claim>> GetClaimsFromUser(ApplicationUser user)
+        private List<Claim> GetClaimsFromUser(ApplicationUser user)
         {
             var claims = new List<Claim>();
             claims.Add(new Claim(JwtClaimTypes.Subject, user.Id.ToString()));
@@ -41,7 +41,7 @@ namespace MyCookieAuthSample.Services
             var subjectId = context.Subject.Claims.FirstOrDefault(c => c.Type == "sub").Value;
             var user = await _userManager.FindByIdAsync(subjectId);
 
-            context.IssuedClaims = await GetClaimsFromUser(user);
+            context.IssuedClaims = GetClaimsFromUser(user);
         }
 
         public async Task IsActiveAsync(IsActiveContext context)
