@@ -8,6 +8,8 @@
  命令
  EntityFramework\add-migration InitConfig  -Context ConfigurationDbContext -OutputDir  data/migrations/identityserver4/ConfigurationDbContext
 
+ef core cli Tools 安装 见https://docs.microsoft.com/en-us/ef/core/miscellaneous/cli/dotnet
+
  dotnet ef cli 即 dotnet 附加ef 的cli
 dotnet ef migrations add InitDB -c ConfigurationDbContext -o  data/migrations/identityserver4/ConfigurationDbContext
 dotnet ef database update -c ConfigurationDbContext

@@ -119,7 +119,6 @@ namespace MyCookieAuthSample.Controllers
                 }
                 else
                 {
-
                     bool isSucc = await userManager.CheckPasswordAsync(user, loginViewModel.Password);
                     //bool isSucc = await userManager.CheckPasswordAsync(user, Convert.ToBase64String(Encoding.Unicode.GetBytes(loginViewModel.Password)));
                     
@@ -128,7 +127,7 @@ namespace MyCookieAuthSample.Controllers
                         AuthenticationProperties properties = null;
                         if (loginViewModel.Rememberme)
                         {
-                            properties = new AuthenticationProperties{IsPersistent=true, ExpiresUtc= DateTime.UtcNow.AddMinutes(20)};
+                            properties = new AuthenticationProperties{IsPersistent=true, ExpiresUtc= DateTime.UtcNow.AddMinutes(1)};
                         }
 
                         await signInManager.SignInAsync(user, properties);
@@ -144,6 +143,7 @@ namespace MyCookieAuthSample.Controllers
                     else
                     {
                         ModelState.AddModelError("", "a long password");
+                        return View(loginViewModel);
                     }
                 }
                 return RedirectToReturnlUrl(returnUrl);
@@ -154,7 +154,6 @@ namespace MyCookieAuthSample.Controllers
         public IActionResult MakeLogin()
         {
             //创建cookie
-
             var claims = new List<Claim> {
                 new Claim(ClaimTypes.Name,"jesse"),
                 new Claim(ClaimTypes.Role, "admin")

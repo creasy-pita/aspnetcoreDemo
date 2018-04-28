@@ -58,7 +58,7 @@ namespace MyCookieAuthSample.Services
                 ,
                 DisplayName = identityResource.DisplayName
                 ,
-                Required = identityResource.Required
+                Required = false//identityResource.Required
                 ,
                 Checked = identityResource.Required
             };
@@ -87,8 +87,6 @@ namespace MyCookieAuthSample.Services
             var request = await identityServerInteractionService.GetAuthorizationContextAsync(returnUrl);
             var client = await clientStore.FindClientByIdAsync(request.ClientId);
             var resources = await resourceStore.FindResourcesByScopeAsync(client.AllowedScopes);
-
-            
 
             ConsentViewModel vm = CreateConsentViewModel(request, client, resources);
 

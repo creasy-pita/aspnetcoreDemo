@@ -34,6 +34,11 @@ namespace MyCookieAuthSample
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //各种服务的注入方式
+            /*
+             services.AddScoped<ConsentService>();//背后方式
+             services.AddDbContext
+             */
             string assemblyName = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
             string IdentityServer4Connection = Configuration.GetConnectionString("IdentityServer4Connection");
 
@@ -57,11 +62,13 @@ namespace MyCookieAuthSample
                 options.Password.RequiredLength = 6;//长度12位
             });
 
-            services.AddIdentityServer()
-            .AddDeveloperSigningCredential()
-            .AddInMemoryApiResources(Config.GetResource())
-            .AddInMemoryClients(Config.GetClient())
-            .AddInMemoryIdentityResources(Config.GetIdentityResource())
+            IIdentityServerBuilder identityServerBuilder = services.AddIdentityServer();
+
+
+            identityServerBuilder.AddDeveloperSigningCredential()
+            //.AddInMemoryApiResources(Config.GetResource())
+            //.AddInMemoryClients(Config.GetClient())
+            //.AddInMemoryIdentityResources(Config.GetIdentityResource())
             //.AddTestUsers(Config.GetTestUser());
             .AddAspNetIdentity<ApplicationUser>()
 
@@ -88,7 +95,6 @@ namespace MyCookieAuthSample
 
             .Services
                 .AddScoped<IProfileService, MyProfileService>();
-            
 
             services.AddMvc();
         }

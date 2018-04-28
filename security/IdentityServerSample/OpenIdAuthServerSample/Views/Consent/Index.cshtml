@@ -17,73 +17,64 @@
 
 </div>
 <div class="row">
+    @Html.Partial("_ErrorPartial")
     <form asp-action="index">
         <!--列举身份信息  并-->
         <input type="hidden" asp-for="ReturnUrl" />
-        @if (ViewContext.ModelState.IsValid == false)
-        {
-           <div class="alert alert-danger">
-                <strong>Error</strong>
-                <div asp-validation-summary="All" class="danger"></div>
-            </div>
-         }
-
 
         @if (Model.IdentityScopes.Any())
-    {
-        <div class="panel">
-            <div class="panel-heading">
-                <span class="glyphicon glyphicon-tasks">用户信息</span>
+        {
+            <div class="panel">
+                <div class="panel-heading">
+                    <span class="glyphicon glyphicon-tasks">用户信息</span>
+                </div>
+                <ul class="list-group">
+                    @foreach (var scope in Model.IdentityScopes)
+                    {
+                        @Html.Partial("_ScopeListitem", scope);
+                    }
+
+                </ul>
             </div>
-            <ul class="list-group">
-                @foreach (var scope in Model.IdentityScopes)
-            {
-                @Html.Partial("_ScopeListitem", scope);
+
         }
-
-            </ul>
-        </div>
-
-}
 
 
         @if (Model.ResourceScopes.Any())
-    {
-        <div class="panel">
-            <div class="panel-heading">
-                <span class="glyphicon glyphicon-tasks">应用权限</span>
-            </div>
-            <ul class="list-group">
-                @foreach (var scope in Model.ResourceScopes)
-            {
-                @Html.Partial("_ScopeListitem", scope);
-        }
+        {
+            <div class="panel">
+                <div class="panel-heading">
+                    <span class="glyphicon glyphicon-tasks">应用权限</span>
+                </div>
+                <ul class="list-group">
+                    @foreach (var scope in Model.ResourceScopes)
+                    {
+                        @Html.Partial("_ScopeListitem", scope);
+                    }
 
-            </ul>
-        </div>
-}
+                </ul>
+            </div>
+        }
         <!--记住我的选择-->
         @if (Model.RememberConsent)
-    {
-        <div class="consent-remember">
-            <label>
-                <input class="consent-scopecheck" asp-for="RememberConsent" />
-                <strong>Remember My Decision</strong>
-            </label>
-        </div>
-}
+        {
+            <div class="consent-remember">
+                <label>
+                    <input class="consent-scopecheck" asp-for="RememberConsent" />
+                    <strong>Remember My Decision</strong>
+                </label>
+            </div>
+        }
         <!--同意 取消-->
         <div>
             <button name="Button" value="yes" class="btn btn-primary" autofocus>同意</button>
             <button name="Button" value="no" class="btn btn-primary">取消</button>
             @if (!string.IsNullOrEmpty(Model.ClientUrl))
-        {
-            <a href="@Model.ClientUrl" class="pull-right btn btn-default">
-                <strong>@Model.ClientUrl</strong>
-            </a>
-
-
-    }
+            {
+                <a href="@Model.ClientUrl" class="pull-right btn btn-default">
+                    <strong>@Model.ClientUrl</strong>
+                </a>
+            }
         </div>
     </form>
 </div>

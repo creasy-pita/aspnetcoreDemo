@@ -21,27 +21,27 @@ namespace MyCookieAuthSample.Services
             this._userManager = userManager;
         }
 
-        private List<Claim> GetClaimsFromUser(ApplicationUser user)
+        private async Task<List<Claim>> GetClaimsFromUser(ApplicationUser user)
         {
             var claims = new List<Claim>();
             claims.Add(new Claim(JwtClaimTypes.Subject, user.Id.ToString()));
             claims.Add(new Claim(JwtClaimTypes.PreferredUserName, user.UserName));
 
-            //var roles = await _userManager.GetRolesAsync(user);
-            //foreach (var role in roles)
-            //{
-            //    claims.Add(new Claim(JwtClaimTypes.Role,role));
-            //}
+            var roles = await _userManager.GetRolesAsync(user);
+            foreach (var role in roles)
+            {
+                claims.Add(new Claim(JwtClaimTypes.Role, role));
+            }
             return claims;
         }
 
 
         public async Task GetProfileDataAsync(ProfileDataRequestContext context)
         {
-            var subjectId = context.Subject.Claims.FirstOrDefault(c => c.Type == "sub").Value;
+            var subjectId = context.Subject.Claims.FirstOrDefault(c => { return c.Type == "sub"; }).Value;
             var user = await _userManager.FindByIdAsync(subjectId);
 
-            context.IssuedClaims = GetClaimsFromUser(user);
+            context.IssuedClaims = await GetClaimsFromUser(user);
         }
 
         public async Task IsActiveAsync(IsActiveContext context)
