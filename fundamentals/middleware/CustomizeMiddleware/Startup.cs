@@ -35,7 +35,7 @@ namespace CustomizeMiddleware
                 app.UseDeveloperExceptionPage();
             }
             int value = 0;
-            app.UseMyMiddleware(value++);
+            app.UseMyMiddleware(value);
             app.UseMvc();
         }
     }

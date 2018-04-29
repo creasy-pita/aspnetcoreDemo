@@ -20,7 +20,7 @@ public class MyMiddleware
             // Do something with context near the beginning of request processing.
             context.Items.Add("VisitTime", _value++);
             await  _next.Invoke(context);
-            Console.WriteLine("handle a request");
+            Console.WriteLine("handle the "+ _value +" request");
             // Clean up.
         }
     }

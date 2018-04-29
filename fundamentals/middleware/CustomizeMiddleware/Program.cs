@@ -20,6 +20,8 @@ namespace CustomizeMiddleware
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
+                //.UseUrls("http://192.168.174.128:5000")
+                .UseUrls("http://0.0.0.0:5001")
                 .Build();
     }
 }
