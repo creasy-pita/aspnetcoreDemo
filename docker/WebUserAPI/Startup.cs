@@ -44,17 +44,24 @@ namespace WebUserAPI
 
         private void InitUserDb(IApplicationBuilder app)
         {
-            using (var scope = app.ApplicationServices.CreateScope())
+            try
             {
-                var context = scope.ServiceProvider.GetRequiredService<AppUserDbContext>();
-                if (!context.User.Any())
+                using (var scope = app.ApplicationServices.CreateScope())
                 {
-                    AppUser appUser = new AppUser { Id = 1,Company="google", Name="creasypita", Title="111" };
-                    context.Add<AppUser>(appUser);
-                    context.SaveChanges();
-                    Console.WriteLine("初始默认用户成功");
+                    var context = scope.ServiceProvider.GetRequiredService<AppUserDbContext>();
+                    if (!context.User.Any())
+                    {
+                        AppUser appUser = new AppUser { Id = 1,Company="google1", Name="creasypita", Title="111" };
+                        context.Add<AppUser>(appUser);
+                        context.SaveChanges();
+                        Console.WriteLine("初始默认用户成功");
+                    }
                 }
             }
+            catch (System.Exception ex)
+            {
+                Console.WriteLine("ignoring everything");
+            }            
 
         }
     }
