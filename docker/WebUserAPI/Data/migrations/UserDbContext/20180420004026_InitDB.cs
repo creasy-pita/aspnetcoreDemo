@@ -21,6 +21,7 @@ namespace WebUserAPI.data.migrations.UserDbContext
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AppUser", x => x.Id);
+                    
                 });
         }
 

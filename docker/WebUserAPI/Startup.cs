@@ -25,8 +25,8 @@ namespace WebUserAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-    //        services.AddDbContext<AppUserDbContext>(options =>
-    //options.UseMySQL(Configuration.GetConnectionString("DefaultConnection")));
+           services.AddDbContext<AppUserDbContext>(options =>
+    options.UseMySQL(Configuration.GetConnectionString("DefaultConnection")));
             services.AddMvc();
         }
 
@@ -37,24 +37,35 @@ namespace WebUserAPI
             {
                 app.UseDeveloperExceptionPage();
             }
-            //InitUserDb(app);
+            InitUserDb(app);
 
             app.UseMvc();
         }
 
         private void InitUserDb(IApplicationBuilder app)
         {
-            using (var scope = app.ApplicationServices.CreateScope())
+
+            try
             {
-                var context = scope.ServiceProvider.GetRequiredService<AppUserDbContext>();
-                if (!context.User.Any())
+                using (var scope = app.ApplicationServices.CreateScope())
                 {
-                    AppUser appUser = new AppUser { Id = 1,Company="google", Name="creasypita", Title="111" };
-                    context.Add<AppUser>(appUser);
-                    context.SaveChanges();
-                    Console.WriteLine("初始默认用户成功");
+                    var context = scope.ServiceProvider.GetRequiredService<AppUserDbContext>();
+
+
+                    if (!context.User.Any())
+                    {
+                        AppUser appUser = new AppUser { Id = 1,Company="google1", Name="creasypita", Title="111" };
+                        context.Add<AppUser>(appUser);
+                        context.SaveChanges();
+                        Console.WriteLine("初始默认用户成功");
+                    }
                 }
             }
+            catch (System.Exception ex)
+            {
+                Console.WriteLine("ignoring everything");
+            }
+
 
         }
     }

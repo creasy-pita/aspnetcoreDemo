@@ -12,18 +12,18 @@ namespace WebUserAPI.Controllers
     {
         public AppUserDbContext appUserDbContext;
 
-        //public ValuesController(AppUserDbContext appUserDbContext) {
-        //    this.appUserDbContext = appUserDbContext;
-        //}
+        public ValuesController(AppUserDbContext appUserDbContext) {
+           this.appUserDbContext = appUserDbContext;
+        }
 
         // GET api/values
         [HttpGet]
         public IEnumerable<string> Get()
         {
-            //AppUser appUser = appUserDbContext.Find<AppUser>(1);
+            AppUser appUser = appUserDbContext.Find<AppUser>(1);
 
-            //return new string[] { appUser.Id.ToString(), appUser.Name, appUser.Company };
-            return new string[] { "value1", "value2" };
+            return new string[] { appUser.Id.ToString(), appUser.Name, appUser.Company };
+            return new string[] { "value1", "value2","creasypita" };
         }
 
         // GET api/values/5
