@@ -1,0 +1,29 @@
+version: '2'
+
+services:
+  db:
+    image: mysql:5.7
+    container_name: db
+    restart: always
+    ports: 
+      - 3307:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    
+    volumes:
+      - /docker/mysql/beta/initdb:/docker-entrypoint-initdb.d
+      - /docker/mysql/config/my.cnf:/etc/my.cnf
+      - /docker/mysql/data:/var/lib/mysql
+  webapi:
+    image: conferenceapp-webapi
+    container_name: webapi
+    ports:
+      - 8001:80
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - /docker/aspnetcore/config/appsettings.json:/appsettings.json     
+    depends_on:
+      - db
+  

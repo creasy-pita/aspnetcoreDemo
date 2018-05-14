@@ -1,3 +1,68 @@
+2018-5-14
+使用 docker-compose 组合构建和运行 mysql 和 aspnetcore webapi 镜像
+    1 创建docker-compose.yml 在项目根目录
+        文件解读
+            version: '2'--表示compose 文件的版本 不同版本特性有所不同
+            services:--包括的镜像服务，这里有db 和 webapi, 容器名称与此有关： 比如containorname:out_db_1
+            db:
+                image: mysql:5.7--可以官方镜像
+                restart: always
+                ports: 
+                - 3307:3306
+                environment:
+                MYSQL_ROOT_PASSWORD: root
+                volumes:
+                - /docker/mysql/config/my.cnf:/etc/my.cnf
+                - /docker/mysql/data:/var/lib/mysql
+                - /docker/mysql/beta/initdb:/docker-entrypoint-initdb.d
+            webapi:
+                image: conferenceapp-webapi--如果通过 Dockerfile构建，则会命名一个镜像名称
+                ports:
+                - 8001:80
+                build:
+                context: .
+                dockerfile: Dockerfile
+                volumes:
+                - /docker/aspnetcore/config/appsettings.json:/appsettings.json  --有问题，不起作用，还需修改   
+                depends_on:
+                - db
+    2 docker-compose up 构建镜像及创建容器运行
+
+
+错误汇总
+    1 外网没办法访问
+        原因：
+            Program.cs 中.UseUrls("http://0.0.0.0:80") webserver 会固定开放80
+            docker-compose 中 虽然ports: - 8001:81, 也还是会固定开发80
+            所以 本级 和局域网 可以使用 http://localhost:80 http://innernetip:80访问
+            但外网使用 http://externalip:8001  不能访问
+        解决
+            docker-compose 中 虽然ports: - 8001:81 修改为 ports: - 8001:80
+            或者 ---
+    2 docker-compose down 后，修改docker-compose.yml 内容更新没有生效
+        原因 
+            Docker-compose down doesn’t remove images
+                By default, the only things removed are:
+                • Containers for services defined in the Compose file
+                • Networks defined in the networks section of the Compose file
+                • The default network, if one is used
+        解决
+            docker rmi [associate_imagename]
+        资料
+            https://forums.docker.com/t/docker-compose-down-doesnt-remove-images/22778
+    3 使用启动容器时初始化mysql脚本
+        host 新建目录 /docker/mysql/beta/initdb
+        目录中增加 初始化脚本   xx.sql
+        在 docker-compose 中增加  - /docker/mysql/beta/initdb:/docker-entrypoint-initdb.d
+        
+        说明：
+            容器中默认有 目录docker-entrypoint-initdb.d 和 文件 entrypoint.sh  ，启动时会执行 sh shell文件
+    3 docker-compose yaml 语法
+        参考资料：
+            https://yeasy.gitbooks.io/docker_practice/content/compose/compose_file.html
+            https://yeasy.gitbooks.io/docker_practice/content/compose/commands.html
+            https://docs.docker.com/compose/gettingstarted
+            https://docs.docker.com/compose/compose-file/
 2018-5-9
 1 开放外网访问
     localhost:5000-> 0.0.0.0:80
