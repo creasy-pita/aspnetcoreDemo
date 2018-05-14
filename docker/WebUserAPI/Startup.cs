@@ -25,8 +25,8 @@ namespace WebUserAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-    //        services.AddDbContext<AppUserDbContext>(options =>
-    //options.UseMySQL(Configuration.GetConnectionString("DefaultConnection")));
+           services.AddDbContext<AppUserDbContext>(options =>
+    options.UseMySQL(Configuration.GetConnectionString("DefaultConnection")));
             services.AddMvc();
         }
 
@@ -37,7 +37,7 @@ namespace WebUserAPI
             {
                 app.UseDeveloperExceptionPage();
             }
-            //InitUserDb(app);
+            InitUserDb(app);
 
             app.UseMvc();
         }
@@ -51,7 +51,7 @@ namespace WebUserAPI
                     var context = scope.ServiceProvider.GetRequiredService<AppUserDbContext>();
                     if (!context.User.Any())
                     {
-                        AppUser appUser = new AppUser { Id = 1,Company="google1", Name="creasypita", Title="111" };
+                        AppUser appUser = new AppUser { Id = 1,Company="google2", Name="creasypita", Title="111" };
                         context.Add<AppUser>(appUser);
                         context.SaveChanges();
                         Console.WriteLine("初始默认用户成功");

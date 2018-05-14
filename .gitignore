@@ -148,6 +148,9 @@ AutoTest.Net/
 # Web workbench (sass)
 .sass-cache/
 
+# publish folder
+docker/WebUserAPI/out
+
 # Installshield output folder
 [Ee]xpress/
 
