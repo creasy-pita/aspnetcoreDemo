@@ -2,7 +2,7 @@ version: '2'
 
 services:
   db:
-    image: mysql:5.7
+    image: mysql/mysql-server:5.7
     container_name: db
     restart: always
     ports: 
@@ -11,7 +11,7 @@ services:
       MYSQL_ROOT_PASSWORD: root
     
     volumes:
-      - /docker/mysql/beta/initdb:/docker-entrypoint-initdb.d
+      - /docker/mysql/initdb:/docker-entrypoint-initdb.d
       - /docker/mysql/config/my.cnf:/etc/my.cnf
       - /docker/mysql/data:/var/lib/mysql
   webapi:

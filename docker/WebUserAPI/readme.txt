@@ -63,6 +63,60 @@
             https://yeasy.gitbooks.io/docker_practice/content/compose/commands.html
             https://docs.docker.com/compose/gettingstarted
             https://docs.docker.com/compose/compose-file/
+
+2018-5-15
+1 mysql镜像容器初始化脚本挂载和执行 
+	步骤
+		1 先创建/docker/mysql/beta/config/my.cnf文件和/docker/mysql/beta/data文件夹
+			my.cnf内容如下
+			[mysqld]
+			user=mysql
+			character-set-server=utf8
+			[client]
+			default-character-set=utf8
+			[mysql]
+			default-character-set=utf8
+
+		2 创建初始化脚本initdb.sql：
+			/*创建库和表*/
+			create database ljqbetauser;
+			use ljqbetauser;
+			CREATE TABLE AppUser (  Id int(11) NOT NULL AUTO_INCREMENT,  Company text,  Name text,  Title text,  PRIMARY KEY (Id)) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+			insert into ljqbetauser.AppUser (Company,Name,Title) values('initgoogle11','creasypita','comment');
+			/*创建用户 和 授权*/
+			CREATE USER 'creasypita'@'%' IDENTIFIED BY 'root';
+			GRANT ALL PRIVILEGES ON *.* TO 'creasypita'@'%' WITH GRANT OPTION;		
+		3 创建目录/docker/mysql/beta/initdb,挂载时映射到容器的 docker-entrypoint-initdb.d文件夹
+		
+		4 启动 			
+			docker container run  -p 3307:3306 -d --rm --name db --network my-net --env MYSQL_ROOT_PASSWORD=root -v=/docker/mysql/beta/initdb:/docker-entrypoint-initdb.d -v=/docker/mysql/beta/config/my.cnf:/etc/my.cnf -v=/docker/mysql/beta/data:/var/lib/mysql mysql/mysql-server:5.7
+	错误汇总
+		使用 mysql:5.7没有执行 initdb.sql 
+			原因：
+				容器启动时默认执行入口初始化文件 docker-entrypoint.sh 不存在
+				mysql:5.7 镜像 使用的 entrypoint shell 是 docker-entrypoint.sh（可以 使用 docker inspect db查看）
+				而容器的根目录只有 	entrypoint.sh 文件 没有docker-entrypoint.sh文件
+		使用mysql/mysql-server:5.7   没有执行 initdb.sql
+			原因：
+				容器启动时默认执行入口初始化文件 entrypoint.sh 是存在
+				但是 挂载data目录要清空 或者使用新的目录，mysql/mysql-server:5.7 不能使用 mysql:5.7 ，对执行 initdb.sql 有影响（未查明原因）
+		mysql/mysql-server:5.7 容器启动时提示： Please read "Security" section of the manual to find out how to run mysqld as root!
+			原因：
+				使用root 启动有安全问题，可以配置另外的启动用户
+			解决：
+				my.cnf内容增加如下
+					[mysqld]
+					user=mysql
+		Host 'webapi.out_default' is not allowed to connect to this MySQL server
+			原因：	
+				当前连接用户使用mysql creasypita 用户，creasypita用户只有 本地ip（localhost）的访问权限
+			解决：
+				授权增加外网ip的访问
+				CREATE USER 'creasypita'@'%' IDENTIFIED BY 'root';
+				grant all privileges on *.* to 'creasypita'@'%' with grant option;
+			注释：
+				此问题属于 aspnetcore webapi 与 此mysql容器互联时出现的问题 ， ConnectionStrings连接字符串使用：Server=db;Database=ljqbetauser;Uid=creasypita;Pwd=root;Encrypt=true
+
 2018-5-9
 1 开放外网访问
     localhost:5000-> 0.0.0.0:80
