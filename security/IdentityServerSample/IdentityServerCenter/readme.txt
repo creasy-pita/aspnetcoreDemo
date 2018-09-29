@@ -3,9 +3,15 @@
 1 创建  webapi 
 2 nuget 添加identityserver4 包
 3 startup 配置
-添加依赖注入services  
-加入管道
-
+	添加依赖注入services  
+	
+		services.AddIdentityServer()
+				.AddDeveloperSigningCredential()
+				.AddInMemoryApiResources(Config.GetResource())
+				.AddInMemoryClients(Config.GetClient())
+				.AddTestUsers(Config.GetTestUser());
+	加入管道
+		app.UseIdentityServer();
 4 添加  config类 ,加入 resource和初始的client
 5 修改statrtup
 在 依赖注入中 加入 resource和初始的client

@@ -176,6 +176,16 @@ COPY --from=build /code/out  ./
 3 制作compose 镜像
 （1） webapi 和 mysql 镜像 合并 开启
 
+step B
+	a 
+		1  header 信息
+		2 payload 用户信息+timstamp+expiretime
+		3 对 header + payload with base64 code
+	b 
+		使用head中的指定的加密算法HS256 和 AUS持有的秘钥 
+		对header + payload 信息 hash 得到签名
+	c 
+		返回
 
 2 
 
@@ -205,7 +215,7 @@ COPY --from=build /code/out  ./
 	3 connection refuse
 	直接cmd 访问
 		https://www.dwheeler.com/essays/open-files-urls.html
-	centos 上 cmd 查看 curl http://localhost:50722/api/values
+	centos 上 cmd 查看 curl http://localhost:50722/api/values 提示：connection refuse
 	进程端口查看
 	防火墙服务 查看
 	是否 
@@ -229,7 +239,7 @@ COPY --from=build /code/out  ./
             https://github.com/dotnet/dotnet-docker-samples/issues/80
             https://stackoverflow.com/questions/26472586/upgrade-docker-on-centos-7
             http://blog.devzeng.com/blog/build-docker-image-with-dockerfile.html
-        归档老版本
+        归档的docker老版本
             https://docs.docker.com/v17.03
             比如 dockerfiler用法
             https://docs.docker.com/v17.03/engine/reference/builder/#shell-form-entrypoint-example

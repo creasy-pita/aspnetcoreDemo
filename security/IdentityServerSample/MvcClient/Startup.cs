@@ -35,7 +35,8 @@ namespace MvcClient
                     options.Authority = "http://localhost:5000";
                     options.RequireHttpsMetadata = false;
 
-                    options.ClientId = "mvc1";
+                    //options.ClientId = "mvc1";
+                    options.ClientId = "client";
                     options.SaveTokens = true;
                 });
         }

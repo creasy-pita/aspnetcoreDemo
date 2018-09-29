@@ -1,4 +1,20 @@
-﻿2018-3-31
+﻿MvcClient 与 此项目配合使用
+	mvcclient 作为 资源端
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+2018-3-31
  identity ef
  1 引入identityserver4.entityframework (identityuser ,role 是属于 identity 模块，而此处属于 identityserver4 认证和授权的信息 模块 如 claims,grantinfo)
  2 包括的dbcontext 包括   ConfigurationDbContext,PersistedGrantDbContext
