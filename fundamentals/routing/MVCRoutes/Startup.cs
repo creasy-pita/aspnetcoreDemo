@@ -66,7 +66,7 @@ namespace MVCRoutes
         #endregion
 
         /// <summary>
-        /// querystring参数：分别从url slash 中 和 querystring中取参数
+        /// querystring参数：分别从url slash divide block 斜线分隔块 中 和 querystring中取参数
         ///  url example:http://localhost:5001/home/index1/1?name=creasy&phone=8750
         ///  /home/index1/1 会作为route内容 根据路由模板规则来匹配
         ///  ?name=creasy&phone=8750 部分会作为 querystring
@@ -78,7 +78,6 @@ namespace MVCRoutes
             app.UseMvc(routeBuilder =>
             {
                 //routeBuilder.MapRoute(name: "aaa", template: "hello/{name}");
-                
                 routeBuilder.MapRoute(template: "hello/{name}", handler: context =>
                     {
                         var routeValues = context.GetRouteData().Values;

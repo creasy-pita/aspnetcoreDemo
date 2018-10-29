@@ -2,14 +2,23 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MVCRoutes.Controllers
 {
-    [Route("[controller]")]
+    [Route("/Index1")]
     public class HomeController : Controller
     {
-        [Route("aa/{id}")]
+        private IApplicationBuilder _applicationBuilder;
+
+        public HomeController(IApplicationBuilder applicationBuilder)
+        {
+            this._applicationBuilder = applicationBuilder;
+        }
+
+
+        [Route("[controller]/[action]/aa/{id}")]
         public ActionResult<IEnumerable<string>> Index(string id)
         {
             var routeValues = ControllerContext.RouteData.Values;
