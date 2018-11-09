@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
@@ -29,6 +30,11 @@ namespace ConfigurationExample
             WebHost.CreateDefaultBuilder(args)
                 .ConfigureAppConfiguration((context, config) =>
                 {
+                    config.SetBasePath(Directory.GetCurrentDirectory());
+                    config.AddJsonFile("json_array.json", optional: false, reloadOnChange: false);
+                //config.AddEFConfiguration(
+                    
+                //        );
                     config.AddXmlFile("tvshow.xml");
                     config.AddInMemoryCollection(arrayDict);
                 }

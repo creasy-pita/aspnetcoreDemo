@@ -16,6 +16,7 @@ namespace ConfigurationExample
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -25,17 +26,16 @@ namespace ConfigurationExample
             {
                 app.UseDeveloperExceptionPage();
             }
-
-
-            app.Run(async (context) =>
+            else
             {
-                var tvShow = new TvShow();
-                config.GetSection("tvshow").Bind(tvShow);
-                var array = new ArrayExample();
-                config.GetSection("array").Bind(array);
-                await context.Response.WriteAsync("Hello World! the tvshow is "+ tvShow.Actors.Names + "ssss array.e[0]="+ array.Entries[0]);
-                
-            });
+                app.UseExceptionHandler("/Error");
+                app.UseHsts();
+            }
+
+            app.UseHttpsRedirection();
+            app.UseStaticFiles();
+            app.UseCookiePolicy();
+            app.UseMvc();
         }
     }
 }
