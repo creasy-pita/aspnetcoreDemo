@@ -19,6 +19,7 @@
 config.GetValue  GetSection() 
 
 3  DbContextOptions 的配置方式， 
+	1 外部 需要 通过 DbContextOptionsBuilder 配置options
 	1通过 委托 _optionsAction 传入 DbContextOptionsBuilder  来配置 DbContextOptions
             配置好了以后  通过DbContextOptionsBuilder 获取 DbContextOptions
 			具体可以查看 EFConfigurationProvider的代码
@@ -28,3 +29,9 @@ config.GetValue  GetSection()
 	2 委托部分直接用 optionsBuilder.UseSqlite("Data Source=blog.db");
 var optionsBuilder = new DbContextOptionsBuilder<BloggingContext>();
 optionsBuilder.UseSqlite("Data Source=blog.db");
+
+	2 DbContext 内部 不需要传输 options,直接在 OnConfiguring配置
+	protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.UseSqlite("Data Source=blog.db");
+    }
