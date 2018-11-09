@@ -32,9 +32,7 @@ namespace ConfigurationExample
                 {
                     config.SetBasePath(Directory.GetCurrentDirectory());
                     config.AddJsonFile("json_array.json", optional: false, reloadOnChange: false);
-                //config.AddEFConfiguration(
-                    
-                //        );
+                    config.AddEFConfiguration(options => options.UseInMemoryDatabase("InMemoryDb"));
                     config.AddXmlFile("tvshow.xml");
                     config.AddInMemoryCollection(arrayDict);
                 }

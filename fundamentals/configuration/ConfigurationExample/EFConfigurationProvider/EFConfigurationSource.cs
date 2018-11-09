@@ -9,16 +9,16 @@ namespace ConfigurationExample.EFConfigurationProvider
 {
     public class EFConfigurationSource : IConfigurationSource
     {
-        private DbContextOptions _dbContextOptions;
+        private Action<DbContextOptionsBuilder> _optionsAction;
 
-        public EFConfigurationSource(DbContextOptions dbContextOptions)
+        public EFConfigurationSource(Action<DbContextOptionsBuilder> optionsAction)
         {
-            this._dbContextOptions = dbContextOptions;
+            this._optionsAction = optionsAction;
         }
 
         public IConfigurationProvider Build(IConfigurationBuilder builder)
         {
-            return new EFConfigurationProvider(_dbContextOptions);
+            return new EFConfigurationProvider(_optionsAction);
         }
     }
 }
