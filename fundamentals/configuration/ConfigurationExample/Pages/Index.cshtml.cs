@@ -19,6 +19,7 @@ namespace ConfigurationExample.Pages
         public JsonArrayExample JsonArrayExample { get; private set; }
         public Dictionary<string, string> dic { get; private set; }
         public string effirstRecordId { get; private set; }
+        public string commandArg { get; private set; }
 
         public void OnGet()
         {
@@ -32,6 +33,7 @@ namespace ConfigurationExample.Pages
             #region snippet_tvshow
             TvShow = _config.GetSection("tvshow").Get<TvShow>();
             #endregion
+            commandArg = _config.GetValue<string>("aa");
             effirstRecordId = _config.GetValue<string>("quote1");
             JsonArrayExample = _config.GetSection("json_array").Get<JsonArrayExample>();
         }

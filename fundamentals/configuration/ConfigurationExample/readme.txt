@@ -6,6 +6,17 @@
 +		[1]	{[json_array:Subsection:0, value1]}	System.Collections.Generic.KeyValuePair<string, string>
 +		[2]	{[json_array:Subsection:1, valueB2]}	System.Collections.Generic.KeyValuePair<string, string>
 +		[3]	{[json_array:Subsection:2, valueB3]}	System.Collections.Generic.KeyValuePair<string, string>
+
+为了帮助理解上面的json_array:Subsection:【0】, value1  中的【0】此处 对json_arry.json
+  "json_array": {
+    "Key": "value1",
+    "Subsection": [ "value1", "valueB2", "valueB3" ]
+  }
+可以解释为
+  "json_array": {
+    "Key": "value1",
+    "Subsection": {"0":"value1","1": "valueB2", "2":"valueB3" ]
+  }
 最底层的叶子节点会变成值， 上层的在key这一层用多层的冒号组织【：：：：】
 +		[0]	{[tvshow:metadata:series, Dr. Who]}	System.Collections.Generic.KeyValuePair<string, string>
 +		[1]	{[tvshow:metadata:title, The Sun Makers]}	System.Collections.Generic.KeyValuePair<string, string>
@@ -35,3 +46,21 @@ optionsBuilder.UseSqlite("Data Source=blog.db");
     {
         optionsBuilder.UseSqlite("Data Source=blog.db");
     }
+
+4  CommandLine 
+	ConfigureAppConfiguration((hostingContext, config) =>
+            {
+                config.AddCommandLine(args);
+            })
+	参数传递方式
+		key前置方式
+			Key prefix	Example
+			No prefix	CommandLineKey1=value1
+			Two dashes (--)	--CommandLineKey2=value2, --CommandLineKey2 value2
+			Forward slash (/)	/CommandLineKey3=value3, /CommandLineKey3 value3
+		单个或多个参数
+			CommandLineKey1=value1  /*单个*/
+			CommandLineKey1=value1 CommandLineKey2=value2  /*多个*/
+		获取参数
+			config.getValue("CommandLineKey1")
+		

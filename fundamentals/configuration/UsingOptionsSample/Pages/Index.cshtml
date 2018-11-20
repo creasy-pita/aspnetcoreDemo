@@ -1,0 +1,35 @@
+﻿@page
+@model IndexModel
+@using UsingOptionsSample.Pages
+@using Microsoft.Extensions.Options
+@using UsingOptionsSample.Models
+@inject IOptions<MyOptions> optionsAccessor
+@{
+}
+<div>
+    options.Option1 : @Model.options.Option1
+</div>
+<div>
+    MyDelegateConfigOptions.Option1 : @Model.delegateConfigOptions.Option1
+    MyDelegateConfigOptions.Option2 : @Model.delegateConfigOptions.Option2
+</div>
+
+<div>
+    subOptions.Option1 : @Model.subOptions.SubOption1
+    subOptions.Option2 : @Model.subOptions.SubOption2
+</div>
+<div>
+    namedOptions1.Option1 : @Model.namedOptions1.Option1
+</div>
+<div>
+    namedOptions2.Option1 : @Model.namedOptions2.Option1
+</div>
+<div>
+    options inject into page: IOptions &lt;MyOptions &gt; optionsAccessor with
+    options.Option1 @optionsAccessor.Value.Option1
+    options.Option2 @optionsAccessor.Value.Option2
+</div>
+<div>
+    snapshotoptions.Option1 can reload : @Model.snapshotoptions.Option1
+</div>
+
