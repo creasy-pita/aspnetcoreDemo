@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using DependencyInjectionSample.Interfaces;
 using DependencyInjectionSample.Services;
+using ThirdPartyAssembly;
 
 namespace DependencyInjectionSample.Pages
 {
@@ -21,7 +22,8 @@ namespace DependencyInjectionSample.Pages
             IOperationSingleton singletonOperation,
             IOperationSingletonInstance singletonInstanceOperation,
             IFoo foo,
-            IBar bar
+            IBar bar,
+            ThirdPartyService thirdPartyService
             )
         {
             _myDependency = myDependency;
@@ -33,11 +35,13 @@ namespace DependencyInjectionSample.Pages
             SingletonInstanceOperation = singletonInstanceOperation;
             Foo = foo;
             Bar = bar;
+            ThirdPartyService = thirdPartyService;
         }
         public IFoo Foo { get; }
         public IBar Bar { get; }
         public OperationService OperationService { get; }
         public OperationService OperationService2 { get; }
+        public ThirdPartyService ThirdPartyService { get; }
         public IOperationTransient TransientOperation { get; }
         public IOperationScoped ScopedOperation { get; }
         public IOperationSingleton SingletonOperation { get; }

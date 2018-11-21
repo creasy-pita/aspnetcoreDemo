@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using DependencyInjectionSample.Interfaces;
 using DependencyInjectionSample.Models;
 using DependencyInjectionSample.Services;
+using ThirdPartyAssembly;
 
 namespace DependencyInjectionSample
 {
@@ -60,6 +61,8 @@ namespace DependencyInjectionSample
             services.AddScoped<IBar>(sp => sp.GetRequiredService<Foo>());
             #endregion
 
+            services.AddScoped<ThirdPartyService2, ThirdPartyService2>();
+            services.AddScoped<ThirdPartyService, ThirdPartyService>();
         }
         #endregion
 
