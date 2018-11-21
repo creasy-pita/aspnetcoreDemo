@@ -39,9 +39,15 @@
 	42918335
 	Ibar
 	42918335
-![Philadelphia's Magic Gardens. This place was so cool!](/markdownassets/images/output.jpg "Philadelphia's Magic Gardens")
+![Philadelphia's Magic Gardens. This place was so cool! This comment for placeholder when the image cannot load](/markdownassets/images/output.jpg "Philadelphia's Magic Gardens")
+
 
 **会获取的服务不同（属于两个实例）**
-
+>note
+* 同一类型不能重复注入，如果有一个类型需要以多种方式注册和使用的场景，采用如下方式
+		services.AddTransient<IOperationTransient, Operation>();
+		services.AddScoped<IOperationScoped, Operation>();
+		services.AddSingleton<IOperationSingleton, Operation>();
+* 
 
 ##2 

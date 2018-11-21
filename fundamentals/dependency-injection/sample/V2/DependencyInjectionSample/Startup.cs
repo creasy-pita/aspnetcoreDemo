@@ -30,7 +30,9 @@ namespace DependencyInjectionSample
             services.AddSingleton<IOperationSingletonInstance>(new Operation(Guid.Empty));
 
             // OperationService depends on each of the other Operation types.
-            services.AddTransient<OperationService, OperationService>();
+            //services.AddTransient<OperationService, OperationService>();
+            services.AddScoped<OperationService, OperationService>();
+            //services.AddSingleton<OperationService, OperationService>();
 
 
             #region one class implements multi interface  #e1
@@ -45,7 +47,7 @@ namespace DependencyInjectionSample
             #region one class implements multi interface  #e3
             //#e2 缺点 在scoped 场景中不适用
             //services.AddScoped<IFoo>(foo);//scope 是每个生命周期去创建实例的，所以不能传实例
-            
+
             //services.AddSingleton<Foo>(); 
             //services.AddSingleton<IFoo>( sp=> sp.GetRequiredService<Foo>());
             //services.AddSingleton<IBar>( sp=> sp.GetRequiredService<Foo>());

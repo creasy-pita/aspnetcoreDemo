@@ -15,6 +15,7 @@ namespace DependencyInjectionSample.Pages
         public IndexModel(
             IMyDependency myDependency, 
             OperationService operationService,
+            OperationService operationService2,
             IOperationTransient transientOperation,
             IOperationScoped scopedOperation,
             IOperationSingleton singletonOperation,
@@ -25,6 +26,7 @@ namespace DependencyInjectionSample.Pages
         {
             _myDependency = myDependency;
             OperationService = operationService;
+            OperationService2 = operationService2;
             TransientOperation = transientOperation;
             ScopedOperation = scopedOperation;
             SingletonOperation = singletonOperation;
@@ -35,6 +37,7 @@ namespace DependencyInjectionSample.Pages
         public IFoo Foo { get; }
         public IBar Bar { get; }
         public OperationService OperationService { get; }
+        public OperationService OperationService2 { get; }
         public IOperationTransient TransientOperation { get; }
         public IOperationScoped ScopedOperation { get; }
         public IOperationSingleton SingletonOperation { get; }
