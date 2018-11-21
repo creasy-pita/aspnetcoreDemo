@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 
 namespace DependencyInjectionSample.Interfaces
 {
-    interface IFoo
+    public interface IFoo
     {
     }
-    interface IBar
+    public interface IBar
     {
     }
 }
