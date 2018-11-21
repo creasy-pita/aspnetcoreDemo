@@ -33,8 +33,11 @@ namespace DependencyInjectionSample
             services.AddTransient<OperationService, OperationService>();
 
 
-            services.AddSingleton<IFoo, Foo>();
-            services.AddSingleton<IBar,Foo >();
+            //services.AddSingleton<IFoo, Foo>();
+            //services.AddSingleton<IBar,Foo >();
+            Foo foo = new Foo();
+            services.AddSingleton<IFoo>(foo);
+            services.AddSingleton<IBar>(foo);
         }
         #endregion
 
