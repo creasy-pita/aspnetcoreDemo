@@ -33,11 +33,31 @@ namespace DependencyInjectionSample
             services.AddTransient<OperationService, OperationService>();
 
 
+            #region one class implements multi interface  #e1
             //services.AddSingleton<IFoo, Foo>();
-            //services.AddSingleton<IBar,Foo >();
-            Foo foo = new Foo();
-            services.AddSingleton<IFoo>(foo);
-            services.AddSingleton<IBar>(foo);
+            //services.AddSingleton<IBar,Foo >(); 
+            #endregion
+            #region one class implements multi interface  #e2
+            //Foo foo = new Foo();
+            //services.AddSingleton<IFoo>(foo);
+            //services.AddSingleton<IBar>(foo);
+            #endregion
+            #region one class implements multi interface  #e3
+            //#e2 缺点 在scoped 场景中不适用
+            //services.AddScoped<IFoo>(foo);//scope 是每个生命周期去创建实例的，所以不能传实例
+            
+            //services.AddSingleton<Foo>(); 
+            //services.AddSingleton<IFoo>( sp=> sp.GetRequiredService<Foo>());
+            //services.AddSingleton<IBar>( sp=> sp.GetRequiredService<Foo>());
+            #endregion
+
+            #region one class implements multi interface  #e4
+            //#e4 在scoped 场景中 不同的接口可以使用相同的实例
+            services.AddScoped<Foo>();
+            services.AddScoped<IFoo>(sp => sp.GetRequiredService<Foo>());
+            services.AddScoped<IBar>(sp => sp.GetRequiredService<Foo>());
+            #endregion
+
         }
         #endregion
 

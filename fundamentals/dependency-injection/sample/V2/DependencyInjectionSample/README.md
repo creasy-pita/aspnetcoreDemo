@@ -1,3 +1,47 @@
-# ASP.NET Core Dependency Injection 2.x Sample
+#在aspnetcoreDI中怎样注册一个实现了多个接口的服务
+##见Startup ConfigureServices方法的 片段：one class implements multi interface
+##1 以单例的方式 给接口IFoo，IBar注册Foo
+	//registered Foo as a singleton for both IFoo and IBar  snippet
+    public void ConfigureServices(IServiceCollection services)
+    {
+		//other to configure
+        services.AddSingleton<IFoo, Foo>();
+        services.AddSingleton<IBar,Foo >(); 
+	}
+<code style="color:green;">services.AddSingleton<IFoo, Foo>()；
+</code><br>
+<span style="color:green;">`services.AddSingleton<IBar, Foo>`</span>;<br>
 
-This sample illustrates the use of dependency injection with ASP.NET Core 2.x. This sample demonstrates the scenario described in the [Dependency injection in ASP.NET Core](https://docs.microsoft.com/aspnet/core/fundamentals/dependency-injection) topic.
+    //Index.cshtml.cs  snippet
+	public class IndexModel : PageModel
+    {
+    private readonly IMyDependency _myDependency;
+    public IndexModel(IFoo foo,IBar bar)
+    {
+	    Foo = foo;
+	    Bar = bar;
+    }
+    public IFoo Foo { get; }
+    public IBar Bar { get; }
+
+	//Index.cshtml  snippet
+    <div class="row">
+    <h3>implements multi interface</h3>
+    <h3>Ifoo</h3>
+    <div>@Model.Foo.GetHashCode()</div>
+    <h3>Ibar</h3>
+    <div>@Model.Bar.GetHashCode()</div>
+    </div>
+***
+	//output 输出结果
+	implements multi interface
+	Ifoo
+	42918335
+	Ibar
+	42918335
+![Philadelphia's Magic Gardens. This place was so cool!](/markdownassets/images/output.jpg "Philadelphia's Magic Gardens")
+
+**会获取的服务不同（属于两个实例）**
+
+
+##2 
