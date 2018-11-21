@@ -26,23 +26,23 @@ namespace DependencyInjectionSample.Controllers
         
         private void PopulateCharactersIfNoneExist()
         {
-            if (!_characterRepository.ListAll().Any())
-            {
-                if (_characterRepository.GetType() == typeof(MysqlCharacterRepository))
-                {
-                    _characterRepository.Add(new Character("mysql Darth Maul"));
-                    _characterRepository.Add(new Character("mysqlDarth Vader"));
-                    _characterRepository.Add(new Character("mysqlmysqlYoda"));
-                    _characterRepository.Add(new Character("mysqlMace Windu"));
-                }
-                else
-                {
-                    _characterRepository.Add(new Character("Darth Maul"));
-                    _characterRepository.Add(new Character("Darth Vader"));
-                    _characterRepository.Add(new Character("Yoda"));
-                    _characterRepository.Add(new Character("Mace Windu"));
-                }
-            }
+            //if (!_characterRepository.ListAll().Any())
+            //{
+            //    if (_characterRepository.GetType() == typeof(MysqlCharacterRepository))
+            //    {
+            //        _characterRepository.Add(new Character("mysql Darth Maul"));
+            //        _characterRepository.Add(new Character("mysqlDarth Vader"));
+            //        _characterRepository.Add(new Character("mysqlmysqlYoda"));
+            //        _characterRepository.Add(new Character("mysqlMace Windu"));
+            //    }
+            //    else
+            //    {
+            //        _characterRepository.Add(new Character("Darth Maul"));
+            //        _characterRepository.Add(new Character("Darth Vader"));
+            //        _characterRepository.Add(new Character("Yoda"));
+            //        _characterRepository.Add(new Character("Mace Windu"));
+            //    }
+            //}
         }
     }
 }

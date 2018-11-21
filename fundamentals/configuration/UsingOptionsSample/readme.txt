@@ -11,7 +11,8 @@
 		namedOptions1 = optionsSnapshot1.Get("named_options_1");
         namedOptions2 = optionsSnapshot1.Get("named_options_2");
 
-
+默认方法
+	
 2018-11-15
 options 源码解读问题
 	_options.OnChange 事件 如何被触发

@@ -23,15 +23,35 @@ namespace ConfigurationExample.EFConfigurationProvider
             //配置好了以后  通过DbContextOptionsBuilder 获取 DbContextOptions
             _optionsAction(builder);
             EFConfigurationContext efContext = new EFConfigurationContext(builder.Options);
-            efContext.Values.Add(new EFConfigurationValue {Id = "quote1", Value = "EFConfigurationvalue1"});
-            efContext.Values.Add(new EFConfigurationValue {Id = "quote2", Value = "EFConfigurationvalue2"});
-            efContext.Values.Add(new EFConfigurationValue {Id = "quote3", Value = "EFConfigurationvalue3"});
-            efContext.SaveChanges();
-            foreach (var item in efContext.Values) {
-                Data.Add(item.Id, item.Value);
-            }
-        }
 
+            Data = !efContext.Values.Any() ?
+                    CreateAndSaveDefaultValues(efContext):
+                efContext.Values.ToDictionary(c => c.Id, c => c.Value);
+        }
+        private static IDictionary<string, string> CreateAndSaveDefaultValues(
+            EFConfigurationContext dbContext)
+        {
+            // Quotes (c)2005 Universal Pictures: Serenity
+            // https://www.uphe.com/movies/serenity
+            var configValues = new Dictionary<string, string>
+                {
+                    { "quote1", "I aim to misbehave." },
+                    { "quote2", "I swallowed a bug." },
+                    { "quote3", "You can't stop the signal, Mal." }
+                };
+
+            dbContext.Values.AddRange(configValues
+                .Select(kvp => new EFConfigurationValue
+                {
+                    Id = kvp.Key,
+                    Value = kvp.Value
+                })
+                .ToArray());
+
+            dbContext.SaveChanges();
+
+            return configValues;
+        }
 
     }
 }
