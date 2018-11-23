@@ -23,7 +23,7 @@ namespace DependencyInjectionSample.Pages
             IOperationSingletonInstance singletonInstanceOperation,
             IFoo foo,
             IBar bar,
-            ThirdPartyService thirdPartyService
+            IThirdPartyService thirdPartyService
             )
         {
             _myDependency = myDependency;
@@ -41,7 +41,7 @@ namespace DependencyInjectionSample.Pages
         public IBar Bar { get; }
         public OperationService OperationService { get; }
         public OperationService OperationService2 { get; }
-        public ThirdPartyService ThirdPartyService { get; }
+        public IThirdPartyService ThirdPartyService { get; }
         public IOperationTransient TransientOperation { get; }
         public IOperationScoped ScopedOperation { get; }
         public IOperationSingleton SingletonOperation { get; }

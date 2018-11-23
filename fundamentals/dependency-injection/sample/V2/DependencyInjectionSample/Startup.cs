@@ -70,13 +70,12 @@ namespace DependencyInjectionSample
             Type nam =typeof(ThirdPartyService);
 
             var aAutoScan = Assembly.GetAssembly(typeof(ThirdPartyService));
-            //services.RegisterAssemblyPublicNonGenericClasses(aAutoScan)
-            //    .Where(
-            //    //x => x.Name.IndexOf("ThirdParty")>=0
-            //    x =>1==1
-            //    )
-            //    .AsPublicImplementedInterfaces();
-            services.RegisterAssemblyPublicNonGenericClasses(aAutoScan).AsPublicImplementedInterfaces();
+            services.RegisterAssemblyPublicNonGenericClasses(aAutoScan)
+                .Where(
+                x => x.Name == nameof(ThirdPartyService)
+                )
+                .AsPublicImplementedInterfaces(ServiceLifetime.Singleton);
+            //services.RegisterAssemblyPublicNonGenericClasses(aAutoScan).AsPublicImplementedInterfaces();
 
         }
         #endregion
