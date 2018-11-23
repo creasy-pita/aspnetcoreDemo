@@ -4,7 +4,7 @@
 	//registered Foo as a singleton for both IFoo and IBar  snippet
     public void ConfigureServices(IServiceCollection services)
     {
-		//other to configure
+		//... other configure code removed
         services.AddSingleton<IFoo, Foo>();
         services.AddSingleton<IBar,Foo >(); 
 	}

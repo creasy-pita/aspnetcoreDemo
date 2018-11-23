@@ -8,6 +8,8 @@ using DependencyInjectionSample.Interfaces;
 using DependencyInjectionSample.Models;
 using DependencyInjectionSample.Services;
 using ThirdPartyAssembly;
+using NetCore.AutoRegisterDi;
+using System.Reflection;
 
 namespace DependencyInjectionSample
 {
@@ -61,8 +63,21 @@ namespace DependencyInjectionSample
             services.AddScoped<IBar>(sp => sp.GetRequiredService<Foo>());
             #endregion
 
-            services.AddScoped<ThirdPartyService2, ThirdPartyService2>();
-            services.AddScoped<ThirdPartyService, ThirdPartyService>();
+            #region ThirdPartyService inject
+            //services.AddScoped<ThirdPartyService2, ThirdPartyService2>();
+            //services.AddScoped<ThirdPartyService, ThirdPartyService>();
+            #endregion
+            Type nam =typeof(ThirdPartyService);
+
+            var aAutoScan = Assembly.GetAssembly(typeof(ThirdPartyService));
+            //services.RegisterAssemblyPublicNonGenericClasses(aAutoScan)
+            //    .Where(
+            //    //x => x.Name.IndexOf("ThirdParty")>=0
+            //    x =>1==1
+            //    )
+            //    .AsPublicImplementedInterfaces();
+            services.RegisterAssemblyPublicNonGenericClasses(aAutoScan).AsPublicImplementedInterfaces();
+
         }
         #endregion
 
