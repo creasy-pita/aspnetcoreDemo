@@ -50,6 +50,7 @@ namespace DependencyInjectionSample.Pages
         public async Task OnGetAsync()
         {
 
+
             await _myDependency.WriteMessage(
                 "IndexModel.OnGetAsync created this message.");
         }

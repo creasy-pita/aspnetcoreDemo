@@ -22,14 +22,14 @@ namespace ConfigurationExample.EFConfigurationProvider
             //通过 委托 _optionsAction 传入 DbContextOptionsBuilder  来配置 DbContextOptions
             //配置好了以后  通过DbContextOptionsBuilder 获取 DbContextOptions
             _optionsAction(builder);
-            EFConfigurationContext efContext = new EFConfigurationContext(builder.Options);
+            PropConfigurationContext efContext = new PropConfigurationContext(builder.Options);
 
             Data = !efContext.Values.Any() ?
                     CreateAndSaveDefaultValues(efContext):
                 efContext.Values.ToDictionary(c => c.Id, c => c.Value);
         }
         private static IDictionary<string, string> CreateAndSaveDefaultValues(
-            EFConfigurationContext dbContext)
+            PropConfigurationContext dbContext)
         {
             // Quotes (c)2005 Universal Pictures: Serenity
             // https://www.uphe.com/movies/serenity

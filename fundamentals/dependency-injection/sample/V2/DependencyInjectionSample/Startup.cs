@@ -37,7 +37,6 @@ namespace DependencyInjectionSample
             services.AddScoped<OperationService, OperationService>();
             //services.AddSingleton<OperationService, OperationService>();
 
-
             #region one class implements multi interface  #e1
             //services.AddSingleton<IFoo, Foo>();
             //services.AddSingleton<IBar,Foo >(); 
@@ -58,6 +57,7 @@ namespace DependencyInjectionSample
 
             #region one class implements multi interface  #e4
             //#e4 在scoped 场景中 不同的接口可以使用相同的实例
+            services.AddSingleton<Foo>();
             services.AddScoped<Foo>();
             services.AddScoped<IFoo>(sp => sp.GetRequiredService<Foo>());
             services.AddScoped<IBar>(sp => sp.GetRequiredService<Foo>());
@@ -92,7 +92,6 @@ namespace DependencyInjectionSample
                 app.UseExceptionHandler("/Error");
                 app.UseHsts();
             }
-
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();

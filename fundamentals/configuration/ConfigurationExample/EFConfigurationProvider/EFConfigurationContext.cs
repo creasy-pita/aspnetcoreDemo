@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace ConfigurationExample.EFConfigurationProvider
 {
-    public class EFConfigurationContext:DbContext
+    public class PropConfigurationContext:DbContext
     {
-        public EFConfigurationContext(DbContextOptions options) : base(options)
+        public PropConfigurationContext(DbContextOptions options) : base(options)
         {
         }
         public DbSet<EFConfigurationValue> Values { get; set; }

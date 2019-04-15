@@ -16,7 +16,7 @@
                 - /docker/mysql/data:/var/lib/mysql
                 - /docker/mysql/beta/initdb:/docker-entrypoint-initdb.d
             webapi:
-                image: conferenceapp-webapi--如果通过 Dockerfile构建，则会命名一个镜像名称
+                image: ljqtestapp-webapi--如果通过 Dockerfile构建，则会命名一个镜像名称
                 ports:
                 - 8001:80
                 build:
@@ -87,15 +87,15 @@
 			CREATE USER 'creasypita'@'%' IDENTIFIED BY 'root';
 			GRANT ALL PRIVILEGES ON *.* TO 'creasypita'@'%' WITH GRANT OPTION;		
 		3 创建目录/docker/mysql/beta/initdb,挂载时映射到容器的 docker-entrypoint-initdb.d文件夹
-		
-		4 启动 			
+		4  docker network create -d bridge my-net 创建 网络
+		5 启动 			
 			docker container run  -p 3307:3306 -d --rm --name db --network my-net --env MYSQL_ROOT_PASSWORD=root -v=/docker/mysql/beta/initdb:/docker-entrypoint-initdb.d -v=/docker/mysql/beta/config/my.cnf:/etc/my.cnf -v=/docker/mysql/beta/data:/var/lib/mysql mysql/mysql-server:5.7
 	错误汇总
 		使用 mysql:5.7没有执行 initdb.sql 
 			原因：
 				容器启动时默认执行入口初始化文件 docker-entrypoint.sh 不存在
 				mysql:5.7 镜像 使用的 entrypoint shell 是 docker-entrypoint.sh（可以 使用 docker inspect db查看）
-				而容器的根目录只有 	entrypoint.sh 文件 没有docker-entrypoint.sh文件
+				而容器的根目录只有 	entrypoint.sh 文件 没有docker-entrypoint.sh 文件
 		使用mysql/mysql-server:5.7   没有执行 initdb.sql
 			原因：
 				容器启动时默认执行入口初始化文件 entrypoint.sh 是存在
@@ -138,9 +138,10 @@
         自部署方式，这样只需要runtime 
             1 查看目标平台系统和硬件参数
                 cat /etc/issue
+				cat /etc/redhat-release
                 getconf LONG_BIT  --查看32/64
                    
-            2 dotnet publish -r debian-x64 -o out  -- 比如： debian-x64
+            2 dotnet publish -r centos.7-x64 -o out  -- 比如： debian-x64
             3 Dockerfile 只需要 FROM microsoft/aspnetcore
 
 2018-4-20
