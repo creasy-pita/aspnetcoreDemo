@@ -1,0 +1,1 @@
+#使用 Serilog 日志 格式化输出日志，可以构建成 docker镜像， 启动时直接将日志存储到 elasticsearch
